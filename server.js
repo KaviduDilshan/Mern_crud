@@ -1,15 +1,15 @@
 const express = require ('express')
 const mongoose = require ('mongoose')
 const bodyParser = require ('body-parser')
-const cors = require('cors')
 const app = express()
 const postRoutes = require ('./routes/posts')
-
-app.use(cors());
+const cors = require('cors')
 
 //app middleware
 app.use(bodyParser.json())
+app.use(cors());
 
+//ROUTE middleware
 app.use('/api', postRoutes);
 
 const PORT = 8000;
