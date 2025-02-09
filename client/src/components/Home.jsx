@@ -44,11 +44,13 @@ export default class Home extends Component {
           </thead>
           <tbody>
             {this.state.posts.map((post, index) => (
-              <tr key={index}>
+              <tr key={post._id || index}>
                 <th scope="row">{index + 1}</th>
                 <td>
-                    <a href ={'/post/{posts,id'} style={{textDecoration:none}}></a>
+                    <a href={`/post/${post._id}`} 
+                    style={{ textDecoration: 'none' }}>
                     {post.topic}
+                    </a>
                 </td>
                 <td>{post.description}</td>
                 <td>{post.postCategory}</td>
@@ -65,7 +67,11 @@ export default class Home extends Component {
             ))}
           </tbody>
         </table>
-        <button className='btn btn success'> <a href='/add'style=({textDecoration:'none',color:white })>create new Posts</a></button>
+        <button className='btn btn-success'>
+         <a href='/add' style={{ textDecoration: 'none', color: 'white' }}>
+         Create New Post
+        </a>
+        </button>
 
 
         {/* <p>All Posts</p>
