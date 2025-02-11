@@ -30,8 +30,8 @@ export default class Home extends Component {
 
   render() {
     return (
-      <div className="container mt-4">
-        <h2>All Posts</h2>
+      <div className="container mt-5">
+        <h3 className="text-center text-dark mb-4">ALL POST</h3>
         <table className="table table-bordered">
           <thead className="thead-dark">
             <tr>

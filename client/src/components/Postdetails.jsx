@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
-// Wrapper function to pass hooks to the class component
+// Wrapper to pass hooks to class component
 function PostDetailsWrapper(props) {
-  const params = useParams();  // To get route params
-  const navigate = useNavigate();  // To navigate programmatically
+  const params = useParams();
+  const navigate = useNavigate();
   return <Postdetails {...props} params={params} navigate={navigate} />;
 }
 
@@ -18,7 +18,7 @@ class Postdetails extends Component {
   }
 
   componentDidMount() {
-    const { id } = this.props.params;  
+    const { id } = this.props.params;
     axios.get(`http://localhost:8000/api/post/${id}`)
       .then((res) => {
         if (res.data.success) {
@@ -36,11 +36,38 @@ class Postdetails extends Component {
 
     return (
       <div className="container mt-4">
-        <h2>Post Details</h2>
-        <div className="card p-3 shadow-sm">
-          <p><strong>Topic : </strong> {topic}</p>
-          <p><strong>Category : </strong> {postCategory}</p>
-          <p><strong>Description : </strong> {description}</p>
+        <h3 className="text-center text-dark mb-4">View Post</h3>
+        <div className="card shadow-lg p-4 border-0 rounded-3">
+          {/* Topic */}
+          <div className="mb-3">
+            <label className="form-label"><strong>Topic:</strong></label>
+            <input 
+              className="form-control" 
+              value={topic} 
+              readOnly 
+            />
+          </div>
+
+          {/* Category */}
+          <div className="mb-3">
+            <label className="form-label"><strong>Category:</strong></label>
+            <input 
+              className="form-control" 
+              value={postCategory} 
+              readOnly 
+            />
+          </div>
+
+          {/* Description */}
+          <div className="mb-3">
+            <label className="form-label"><strong>Description:</strong></label>
+            <textarea 
+              className="form-control" 
+              rows="5" 
+              value={description} 
+              readOnly
+            />
+          </div>
         </div>
       </div>
     );
