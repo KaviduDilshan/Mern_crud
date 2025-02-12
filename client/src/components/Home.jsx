@@ -55,7 +55,7 @@ export default class Home extends Component {
                 <td>{post.description}</td>
                 <td>{post.postCategory}</td>
                 <td>
-                  <a className='btn btn-warning' href='#'>
+                  <a className='btn btn-warning' href='edit/${post.id}'>
                     <i className='fas fa-edit'></i>&nbsp;Edit
                   </a>
                   &nbsp;
