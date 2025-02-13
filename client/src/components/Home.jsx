@@ -5,7 +5,8 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: []
+      posts: [],
+      searchQuery: '' // Add search state
     };
   }
 
@@ -13,14 +14,12 @@ export default class Home extends Component {
     this.retrievePosts();
   }
 
-  // Correctly named method
+  // Fetch posts from API
   retrievePosts() {
     axios.get('http://localhost:8000/api/post')
       .then(res => {
         if (res.data.success) {
-          this.setState({ posts: res.data.existingPosts }, () => {
-            console.log(this.state.posts);
-          });
+          this.setState({ posts: res.data.existingPosts });
         }
       })
       .catch(error => {
@@ -28,24 +27,50 @@ export default class Home extends Component {
       });
   }
 
+  // Handle search input change
+  handleSearch = (event) => {
+    this.setState({ searchQuery: event.target.value });
+  };
+
+  // Delete post method
   deletePost = (id) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       axios.delete(`http://localhost:8000/api/post/delete/${id}`)
         .then(res => {
           alert("Post deleted successfully!");
-          this.retrievePosts(); // Refresh the posts list
+          this.retrievePosts(); // Refresh posts after deletion
         })
         .catch(error => {
           console.error("Error deleting post:", error);
         });
     }
   };
-  
 
   render() {
+    const { posts, searchQuery } = this.state;
+
+    // Filter posts based on search query (case insensitive)
+    const filteredPosts = posts.filter((post) =>
+      post.topic.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.postCategory.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
       <div className="container mt-5">
-        <h3 className="text-center text-dark mb-4">ALL POST</h3>
+        <h3 className="text-center text-dark mb-4">ALL POSTS</h3>
+
+        {/* Search Input */}
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search by topic, description, or category..."
+            value={this.state.searchQuery}
+            onChange={this.handleSearch}
+          />
+        </div>
+
         <table className="table table-bordered">
           <thead className="thead-dark">
             <tr>
@@ -57,48 +82,37 @@ export default class Home extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.posts.map((post, index) => (
+            {filteredPosts.map((post, index) => (
               <tr key={post._id || index}>
                 <th scope="row">{index + 1}</th>
                 <td>
-                    <a href={`/post/${post._id}`} 
-                    style={{ textDecoration: 'none' }}>
+                  <a href={`/post/${post._id}`} style={{ textDecoration: 'none' }}>
                     {post.topic}
-                    </a>
+                  </a>
                 </td>
                 <td>{post.description}</td>
                 <td>{post.postCategory}</td>
                 <td>
                   <a className='btn btn-warning' href={`/edit/${post._id}`}>
-                  <i className='fas fa-edit'></i>&nbsp;Edit
+                    <i className='fas fa-edit'></i>&nbsp;Edit
                   </a>
                   &nbsp;
-                  <a className='btn btn-danger' onClick={() => this.deletePost(post._id)}>
-                   <i className='fas fa-trash-alt'></i>&nbsp;Delete
-                  </a>
+                  <button className='btn btn-danger' onClick={() => this.deletePost(post._id)}>
+                    <i className='fas fa-trash-alt'></i>&nbsp;Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {/* Create Post Button */}
         <button className='btn btn-success'>
-         <a href='/add' style={{ textDecoration: 'none', color: 'white' }}>
-         Create New Post
-        </a>
+          <a href='/add' style={{ textDecoration: 'none', color: 'white' }}>
+            Create New Post
+          </a>
         </button>
-
-        
-
-
-        {/* <p>All Posts</p>
-        {this.state.posts.map((post, index) => (
-          <div key={index}>
-            <p>{post.topic}</p>
-            <p>{post.description}</p>
-            <p>{post.postCategory}</p>
-          </div>
-        ))} */}
       </div>
     );
   }
-} 
+}
