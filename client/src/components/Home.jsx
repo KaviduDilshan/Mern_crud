@@ -28,6 +28,20 @@ export default class Home extends Component {
       });
   }
 
+  deletePost = (id) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      axios.delete(`http://localhost:8000/api/post/delete/${id}`)
+        .then(res => {
+          alert("Post deleted successfully!");
+          this.retrievePosts(); // Refresh the posts list
+        })
+        .catch(error => {
+          console.error("Error deleting post:", error);
+        });
+    }
+  };
+  
+
   render() {
     return (
       <div className="container mt-5">
@@ -55,12 +69,12 @@ export default class Home extends Component {
                 <td>{post.description}</td>
                 <td>{post.postCategory}</td>
                 <td>
-                  <a className='btn btn-warning' href='edit/${post.id}'>
-                    <i className='fas fa-edit'></i>&nbsp;Edit
+                  <a className='btn btn-warning' href={`/edit/${post._id}`}>
+                  <i className='fas fa-edit'></i>&nbsp;Edit
                   </a>
                   &nbsp;
-                  <a className='btn btn-danger' href='#'>
-                    <i className='fas fa-trash-alt'></i>&nbsp;Delete
+                  <a className='btn btn-danger' onClick={() => this.deletePost(post._id)}>
+                   <i className='fas fa-trash-alt'></i>&nbsp;Delete
                   </a>
                 </td>
               </tr>
@@ -72,6 +86,8 @@ export default class Home extends Component {
          Create New Post
         </a>
         </button>
+
+        
 
 
         {/* <p>All Posts</p>
